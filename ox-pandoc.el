@@ -234,6 +234,9 @@ version. If nil, no checks are performed and no warnings generated."
     ;;(?w "to mediawiki." org-pandoc-export-to-mediawiki)
     ;; (?w "to mediawiki and open." org-pandoc-export-to-mediawiki-and-open)
     ;; (?W "as mediawiki." org-pandoc-export-as-mediawiki)
+    ;;(?w "to xwiki." org-pandoc-export-to-xwiki)
+    ;; (?w "to xwiki and open." org-pandoc-export-to-xwiki-and-open)
+    ;; (?W "as xwiki." org-pandoc-export-as-xwiki)
     (?x "to docx and open." org-pandoc-export-to-docx-and-open)
     (?X "to docx." org-pandoc-export-to-docx)
     ;;(?y "to slidy." org-pandoc-export-to-slidy)
@@ -969,6 +972,7 @@ version. If nil, no checks are performed and no warnings generated."
   "Export as markdown_strict."
   (interactive) (org-pandoc-export 'markdown_strict a s v b e t))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defcustom org-pandoc-options-for-mediawiki nil
   "Pandoc options for mediawiki."
   :group 'org-pandoc
@@ -993,6 +997,32 @@ version. If nil, no checks are performed and no warnings generated."
 (defun org-pandoc-export-as-mediawiki (&optional a s v b e)
   "Export as mediawiki."
   (interactive) (org-pandoc-export 'mediawiki a s v b e t))
+
+(defcustom org-pandoc-options-for-xwiki nil
+  "Pandoc options for xwiki."
+  :group 'org-pandoc
+  :type org-pandoc-option-type)
+
+(defcustom org-pandoc-after-processing-xwiki-hook nil
+  "Hook called after processing xwiki."
+  :group 'org-pandoc
+  :type 'hook)
+
+;;;###autoload
+(defun org-pandoc-export-to-xwiki (&optional a s v b e)
+  "Export to xwiki."
+  (interactive) (org-pandoc-export 'xwiki a s v b e))
+
+;;;###autoload
+(defun org-pandoc-export-to-xwiki-and-open (&optional a s v b e)
+  "Export to xwiki and open."
+  (interactive) (org-pandoc-export 'xwiki a s v b e 0))
+
+;;;###autoload
+(defun org-pandoc-export-as-xwiki (&optional a s v b e)
+  "Export as xwiki."
+  (interactive) (org-pandoc-export 'xwiki a s v b e t))
+
 
 (defcustom org-pandoc-options-for-ms nil
   "Pandoc options for ms."
@@ -1670,7 +1700,7 @@ holding contextual information."
 
          ((string-prefix-p "citeproc_bib_item" path) ; Rendered citation footnote number
 		  ) ;; leave it alone, it should already be correct
-		 
+
          (t                           ; captioned items
           (setq number (org-export-get-ordinal
                         destination info nil #'org-pandoc--has-caption-p))))
